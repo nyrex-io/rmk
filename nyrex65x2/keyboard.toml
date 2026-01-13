@@ -1,6 +1,6 @@
 [keyboard]
 name = "nyrex65x2"
-product_name = "Nyrex 65X2"
+product_name = "Nyrex 65X2 RMK"
 vendor_id = 0x05ac # lmao apple
 product_id = 0x1393 # airpods
 manufacturer = "Nyrex"
@@ -11,6 +11,10 @@ chip = "nrf52840"
 # airpods case g3 0x139a (magsafe g3)
 # airpods case g4 0x13a0 (anc)
 # airpods case p2 0x2025 (pro 2 usbc)
+
+[chip.nrf52840]
+dcdc_reg1 = true #enable reg1 for vddh. DO NOT ENABLE REG0
+
 
 
 [layout]
@@ -25,6 +29,11 @@ matrix_map = """
 (4, 0, L)   (4, 1, L)   (4, 2, L)   (4, 3, L)   (4, 4, L)                                                       (4, 9, R)   (4, 10, R)  (4, 11, R)  (4, 12, R)  (4, 13, R)  (4, 14, R)  (4, 15, R)
 """
 
+#["0,0",             "0,1",  "0,2",  "0,3",  "0,4",  "0,5",  "0,6",  {x:1},  "0,7",  "0,8",  "0,9",          "0,10",         "0,11",         "0,12",         "0,13",         "0,14",         "0,15"],
+#[{w:1.5},"1,0",     "1,1",  "1,2",  "1,3",  "1,4",  "1,5",          {x:1},  "1,7",  "1,8",  "1,9",          "1,10",         "1,11",         "1,12",         "1,13", {w:1.5},"1,14",         "1,15"],
+#[{w:1.75},"2,0",    "2,1",  "2,2",  "2,3",  "2,4",  "2,5",          {x:1},          "2,8",  "2,9",          "2,10",         "2,11",         "2,12",         "2,13",{w:2.25},"2,14",         "2,15"],
+#[{w:1.25},"3,0",    "3,1",  "3,2",  "3,3",  "3,4",  "3,5",  "3,6",  {x:1},          "3,8",  "3,9",          "3,10",         "3,11",         "3,12",{w:1.75},"3,13",         "3,14",         "3,15"],
+#[{w:1.25},"4,0",    "4,1",  "4,2",  "4,3",  {w:2.75},"4,4",         {x:1,           w:2.25},"4,9", {w:1.25},"4,10",{w:1.25},"4,11",{w:1.25},"4,12",         "4,13",         "4,14",         "4,15"]
 
 
 # Layer 0 (Base Layer)
@@ -45,7 +54,7 @@ keys = """
 Grave   F1          F2      F3      F4      F5      F6              F7              F8              F9              F10         F11         F12         _               _           AudioVolUp
 _       _           Home    Up      End     PageUp                  MouseWheelUp    MouseBtn1       MouseUp         MouseBtn2   _           _           _               Backslash   AudioVolDown
 _       CapsLock    Left    Down    Right   PageDown                                MouseWheelDown  MouseLeft       MouseDown   MouseRight  _           _               _           AudioMute
-_       _           _       _       _       _       _                               MouseBtn4       MouseBtn5       _           _           _           _               _           _
+_       _           User0   User1   User2   User5   User6                           MouseBtn4       MouseBtn5       _           _           _           _               _           _
 _       _           _       _       _                                                               _               _           _           _           _               _           _
 """     #           #       #       #       #       #               #               #               #               #           #           #           #               #           #
 
@@ -64,6 +73,9 @@ _       _           _       _       _                                           
 
 [ble]
 enabled = true
+battery_adc_pin = "vddh"
+default_tx_power = 8 #boost signal
+ble_use_2m_phy = true #default
 
 [split]
 connection = "ble"
@@ -92,6 +104,17 @@ col_pins = ["P0_12", "P0_11", "P1_09", "P1_08", "P0_07", "P0_06", "P0_05", "P0_2
 
 
 
+[[split.central.output]]
+pin = "P0_25" # Only the pin name is required, the rest of the fields are optional
+initial_state_active = false
+low_active = false
+
+[[split.peripheral.output]]
+pin = "P0_25" # Only the pin name is required, the rest of the fields are optional
+initial_state_active = false
+low_active = false
+
+
 [host]
 # Unlock combination: simultaneous press of specified keys
 # Format: [[row, col], [row, col], ...]
@@ -99,3 +122,12 @@ unlock_keys = [[0, 2], [0, 4]] # Keys at (row=0,col=2) and (row=0,col=5)
 
 [rmk]
 split_peripherals_num = 1
+
+mouse_key_interval = 20 #mouse movement speed, interval in ms
+mouse_wheel_interval = 80 #mouse wheel speed, interval in ms
+debounce_time = 20 #debounce time in ms, default 20
+ble_profiles_num = 3 
+split_central_sleep_timeout_seconds = 0 #central sleep timeout in seconds, 0 to disable
+
+
+
